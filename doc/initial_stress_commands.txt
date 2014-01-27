@@ -1,0 +1,27 @@
+List of Commands for Stress test mode
+
+all the commands are prefixed by ":"
+So to run a command "search", enter
+
+":search <query statement>"
+
+- add <path_to_file>
+	Adds the file's contents (if properly formatted) to the index
+
+- clear-index
+	clears the index completely
+
+- build-as-avl
+	Builds the index as an AVL DS (if the index has not been saved to the disk
+		this will take substantially longer)
+
+- build-as-ht
+	Builds the index as an Hash Table DS (if the index has not been saved to the disk
+		this will take substantially longer)
+
+- search <query statement>
+	Run a search with that query statement and return a list of documents found
+		through the index
+
+- quit
+	exit program

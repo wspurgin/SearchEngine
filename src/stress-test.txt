@@ -1,0 +1,3 @@
+:clear-index
+:add all
+:search AND Boston books OR Seattle

@@ -1,0 +1,16 @@
+[[Organic Chemistry/Haloalkanes|<<Haloalkanes]]|'''Alkenes'''|[[Organic Chemistry/Alkynes|Alkynes>>]]Alkenes are [[Organic Chemistry/Glossary#A|aliphatic]] [[Organic Chemistry/Glossary#H|hydrocarbons]] containing carbon-carbon double bonds and general formula C<sub>n</sub>H<sub>2n</sub>.=Naming Alkenes= Alkenes are named as if they were alkanes, but the"-ane" suffix is changed to &quot;-ene&quot;. If the alkene contains onle one double bond and that double bond is terminal (the double bond is at one end of the molecule or another) then it is not necessary to place any number in front of the name.
+
+&lt;blockquote&gt;
+'''butane:''' C&lt;sub&gt;4&lt;/sub&gt;H&lt;sub&gt;10&lt;/sub&gt; (CH&lt;sub&gt;3&lt;/sub&gt;
+
+'''butene:''' C&lt;sub&gt;
+&lt;/blockquote&gt;
+
+If the double block is not terminal (if it is on a carbon somewhere in the center of the chain) then the carbons should be numbered in such a way as to give the first of the two double-bonded carbons the lowest possible number, and that number should procede the &quot;ene&quot; suffux with a dash, as shown below.
+
+
+----
+[[Organic Chemistry/Haloakanes|&lt;&lt; Haloalkanes]]
+|'''Alkenes'''| [[organic Chemistry/Alkynes &gt;&gt;]]
+
+{BookCat}}

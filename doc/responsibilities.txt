@@ -1,0 +1,19 @@
+Team Sperlt
+
+Nastasha Gerlt:
+	
+	QueryProcessor
+	Ranker
+	IndexInterface
+	AVLInterface
+	AVLTree
+	StringCleaner
+
+Will Spurgin
+	
+	UI
+	IndexHandler
+	DocumentProcessor
+	DocumentLoader
+	HashTableInterface
+	HashTable

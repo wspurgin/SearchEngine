@@ -1,0 +1,46 @@
+USER MANUAL
+
+This is the User Manual for the MustangWiki Search Engine. Below are the commands and their descriptions separated by modes given in the user interface.
+
+“Interactive” mode
+
+- search [query statement]
+This command is used to search the index with the given query statement. A list of 15 documents will be returned from which the user can peruse. (In stress-test mode, the list will be printed to screen but that is all.)
+Example: “search AND Boston Seattle” will return a list of documents containing Boston and Seattle.
+
+- build-as-avl
+Rebuild/build the index with an AVL structure. (if the index is already built with an AVL structure, this will still rebuild the index).
+
+- build-as-ht
+Rebuild/build the index with a HashTable structure. (HashTable structure is the default structure of the Index, and like the AVL tree, it will rebuild the index as a HashTable regardless of whether it is already built as with a HashTable structure).
+
+“Maintenance” mode
+
+- add [file path]
+Given that the file indicated is a file with valid xml (proper structure) then the contents of that document will be added to the Index.
+
+- clear-index
+Will wipe the index clean.
+
+“Stress-test” mode
+
+All the commands above can be used in the “stress-test” mode. Upon entering the stress-test mode, you will be prompted to enter a file path as such:
+“Enter path to stress-test file:
+>[path to file]”
+
+Note: the format for each line of the stress-test file should be:
+“:[command] [command-args]”
+
+Global commands
+
+- quit
+Exits the application.
+
+- help
+Displays this help text.
+
+-ch-mode
+Will change the current mode to either 'interactive', 'maintenance', or 'stress-test'
+
+Note: Regardless of what mode you are in, if you prefix any command with ':' and it will override your mode permissions.
+
