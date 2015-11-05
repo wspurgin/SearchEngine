@@ -1,4 +1,9 @@
+*.o
+*.exe
 *.xml
 *.out
 .DS_Store
 *.pdf
+file_structure.txt
+index.txt
+

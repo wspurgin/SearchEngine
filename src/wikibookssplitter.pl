@@ -1,5 +1,4 @@
-#!/usr/bin/perl
-
+#! /usr/bin/env perl -w
 if ($#ARGV == -1) {
     $outputString = "\nUsage: wikibooksplitter.pl <WikiDump File> [Pages per file] [Max Files] [Output Directory]\n";
     $outputString .= "\tWikiDump File: The path and name of the WikiDump File\n";
@@ -28,11 +27,6 @@ if ($#ARGV >= 3) {
 unless (-e $outputDir or mkdir $outputDir) {
     die "\nUnable to create the output directory '".$outputDir."'. Do you have write permission in this folder?\n\n";
 }
-
-# my $dir = 'WikiDump';
-# unless (-e $dir or mkdir $dir) {
-#     die "\nUnable to create the output directory. Do you have write permission in this folder?\n\n";
-# }
 
 open (WIKIFILE, $ARGV[0]) or die "\nFailed to open input file".$ARGV[0].". Are you sure the path is correct?\n\n";
 my $fileName = '/WikiDumpPart';
@@ -73,5 +67,5 @@ while (<WIKIFILE>) {
 close(WIKIFILE);
 close(OUTPUTFILE);
 
-print "\n\nDone! Your files are in the $dir folder\n\n";
+print "\n\nDone! Your files are in the $outputDir folder\n\n";
 

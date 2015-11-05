@@ -1,7 +1,4 @@
 /*
-Nastasha Gerlt, Will Spurgin
-12/3/2013
-Search Engine - Data Structures
 "UI" implementation file
 */
 
@@ -47,17 +44,21 @@ QueryProcessor UI::getQueryProcessor() const { return this->query_processor; }
 
 int UI::waitForCommand()
 {
+  while(true) {
     cout << ">";
     string cmd;
     getline(cin, cmd);
     cout << endl;
-    return analyzeCommand(cmd);
+    if(analyzeCommand(cmd) == 0)
+      break;
+  }
+  return 0;
 }
 
 int UI::analyzeCommand(string cmd_line)
 {
     if(cmd_line == "")
-        return waitForCommand();
+        return 1;
     bool override = false;
     if(cmd_line.front() == ':') //user has entered global command
     {
@@ -105,7 +106,7 @@ int UI::analyzeCommand(string cmd_line)
         {
             //Need to get the rest of the line minus 'add'
             cmd_line.erase(cmd_line.begin(), cmd_line.begin()+3);
-            //trim leading whitespace  
+            //trim leading whitespace
             while(cmd_line.front() == ' ')
                 cmd_line.erase(cmd_line.begin());
             return add(cmd_line);
@@ -117,7 +118,7 @@ int UI::analyzeCommand(string cmd_line)
     if(this->mode != 3)
     {
         cout << "No command '" << cmd << "' write 'help' if you need it." << endl;
-        return waitForCommand();
+        return 1;
     }
     return 0;
 }
@@ -130,12 +131,12 @@ int UI::quit()
 
 int UI::search(string query)
 {
-    
     //trim leading whitespace
     while(query.front() == ' ')
         query.erase(query.begin());
 
     cout << "query = '" << query << "'" << endl;
+
     //check if query is properly formatted
     stringstream sin(query);
     string temp;
@@ -143,6 +144,7 @@ int UI::search(string query)
     int count_before_keyword = 0;
     bool first_keyword = false;
     bool bad = false;
+
     //check for first key word or if query is just one word.
     while(sin >> temp)
     {
@@ -156,14 +158,14 @@ int UI::search(string query)
             bad = true;
             break;
         }
-    }    
+    }
 
     sin.seekg(0, sin.beg); // reset to beginning of query
 
     if(bad)
     {
         cout << "Improperly formatted query, type 'help' if you need it" << endl;
-        return waitForCommand();
+        return 1;
     }
 
     //check for the number of words after keywords
@@ -194,7 +196,7 @@ int UI::search(string query)
     if(bad)
     {
         cout << "Improperly formatted query, type 'help' if you need it" << endl;
-        return waitForCommand();
+        return 1;
     }
     else
     {
@@ -205,7 +207,7 @@ int UI::search(string query)
         {
             cout << "No documents found matching the query, '" << query << "'" << endl;
             if(this->mode != 3)
-                return waitForCommand();
+              return 1;
         }
         else
         {
@@ -217,7 +219,7 @@ int UI::search(string query)
                     vector<string> doc = this->doc_processor.load(results[i].substr(0, 31));
                     if(doc.size() > 1)
                     {
-                        cout << " title: '"; 
+                        cout << " title: '";
                         cout << doc[0] << "' author: '" << doc[1];
                         cout << "' tf/idf = '" << results[i].substr(32) << "'" << endl;
                     }
@@ -226,7 +228,7 @@ int UI::search(string query)
                 catch(exception& e)
                 {
                     cout << e.what() << endl;
-                    return waitForCommand();
+                    return 1;
                 }
             }
         }
@@ -234,7 +236,7 @@ int UI::search(string query)
         if(this->mode == 3) //stress-test mode
             return 0;
 
-        return waitForCommand();
+        return 1;
     }
 }
 
@@ -243,9 +245,9 @@ int UI::build_as_ht()
     if(this->mode != 3)
     {
         cout << "Warning, you are trying to change the underlying structure of "
-            << "the index.\nThis action is permitted, BUT you should proceed only"
-            << "if you know what you're doing.\nType 'Y' to continue, 'n' to"
-            << " cancel" << endl;
+            << "the index." << endl << "This action is permitted, BUT you should\
+            proceed only if you know what you're doing." << endl
+            << "Continue? [Y/n]> ";
         char choice;
         try
         {
@@ -256,12 +258,16 @@ int UI::build_as_ht()
                 if(!this->handler.setUpIndex())
                     cout << "Errors have occured attempting to build Index as Hash Table." << endl;
             }
-            return waitForCommand();
+            else
+              cout << "Cancelled." << endl;
+
+            return 1;
         }
+        // TODO catch specific error, not just exception
         catch(exception& e)
         {
             cout << "Cancelled." << endl;
-            return waitForCommand();
+            return 1;
         }
     }
     else
@@ -277,9 +283,9 @@ int UI::build_as_avl()
     if(this->mode != 3)
     {
         cout << "Warning, you are trying to change the underlying structure of "
-            << "the index.\nThis action is permitted, BUT you should proceed only"
-            << "if you know what you're doing.\nType 'Y' to continue, 'n' to"
-            << " cancel" << endl;
+            << "the index." << endl << "This action is permitted, BUT you should\
+            proceed only if you know what you're doing." << endl
+            << "Continue? [Y/n]> ";
         char choice;
         try
         {
@@ -290,12 +296,16 @@ int UI::build_as_avl()
                 if(!this->handler.setUpIndex())
                     cout << "Errors have occured attempting to build Index as AVL Tree." << endl;
             }
-            return waitForCommand();
+            else
+              cout << "Cancelled." << endl;
+
+            return 1;
         }
+        // TODO catch specific error, not just exception
         catch(exception& e)
         {
             cout << "Cancelled." << endl;
-            return waitForCommand();
+            return 1;
         }
     }
     else
@@ -327,21 +337,21 @@ int UI::add(string filePath)
                 this->doc_processor.readDocs(file.str().c_str());
 
                 if(this->mode != 3)
-                    return waitForCommand();
+                    return 1;
             }
         }
         else
         {
             this->doc_processor.readDocs(filePath.c_str());
             if(this->mode != 3)
-                return waitForCommand();
+                return 1;
         }
     }
     catch(logic_error& e)
     {
         cout << e.what() << endl;
         if(this->mode != 3)
-            return waitForCommand();
+            return 1;
     }
     /*
     If something unaccounted for happens but we get here without
@@ -371,12 +381,12 @@ int UI::clear_index()
             }
             else
                 cout << "Cancelled" << endl;
-            return waitForCommand();
+            return 1;
         }
         catch(exception& e)
         {
             cout << "Cancelled." << endl;
-            return waitForCommand();
+            return 1;
         }
     }
     else
@@ -401,14 +411,14 @@ int UI::help()
         delete[] help_text;
 
         if(this->mode != 3)
-            return waitForCommand();
+            return 1;
     }
     else
     {
         cout << "Could not open .ui_man for help text." << endl
             << "Please refer to the user manual in doc" << endl;
         if(this->mode != 3)
-            return waitForCommand();
+            return 1;
     }
     return 0;
 }
@@ -420,11 +430,11 @@ int UI::ch_mode()
     while(!goOn)
     {
         cout << endl << "Please enter mode:\ninteractive\nOR\nmaintenance\nOR\nstress-test" << endl;
-        
+
         cout << ">";
         cin >> u_mode;
         cout << endl;
-        
+
         toLower(u_mode);
 
         if(u_mode ==  "interactive")
@@ -450,7 +460,7 @@ int UI::ch_mode()
     cout << "Entering " << u_mode << " mode." << endl;
     if(this->mode == 3)
         return stress_test();
-    return waitForCommand();
+    return 1;
 }
 
 int UI::stress_test()
@@ -488,7 +498,7 @@ int UI::stress_test()
                 analyzeCommand(command);
                 end = chrono::system_clock::now();
                 duration = chrono::duration_cast<std::chrono::milliseconds>(end-start).count();
-                cout << "Command '" << command << "' took " << duration << "ms to complete" << endl; 
+                cout << "Command '" << command << "' took " << duration << "ms to complete" << endl;
             }
             cout << endl  << endl << "Finished All commands in the file '"
                 << file_path << "'." << " Moving to interactive mode." << endl;
@@ -498,10 +508,10 @@ int UI::stress_test()
         else
         {
             cout << "Could not open the file '" << file_path << "'. Please try again" << endl;
-            goOn = false; // to be extra sure 
+            goOn = false; // to be extra sure
         }
     }
-    return waitForCommand();
+    return 1;
 }
 
 void UI::toLower(string& str)

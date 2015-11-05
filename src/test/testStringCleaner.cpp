@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-	ifstream fin("../doc/XMLTest.txt");
+	ifstream fin("../../doc/XMLTest.txt");
 	if(!fin)
 		cout << "File Not Found" << endl;
 	string text = "";

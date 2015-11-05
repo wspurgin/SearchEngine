@@ -146,7 +146,7 @@ void DocProcessor::readDocs(const char* filePath)
 
 			// go through the cleaned text and grab each word
 			stringstream stream(text);
-			
+
 			while(stream.good())
 			{
 				string word;
@@ -172,7 +172,7 @@ void DocProcessor::readDocs(const char* filePath)
 					map[word]++;
 				}
 			}
-			
+
 			//add docuemnt id with the path to this file to the loader
 			this->loader.addIdPathPair(id, filePath);
 

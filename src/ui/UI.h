@@ -1,7 +1,4 @@
 /*
-Nastasha Gerlt, Will Spurgin
-12/3/2013
-Search Engine - Data Structures
 "UI" header file
 */
 
