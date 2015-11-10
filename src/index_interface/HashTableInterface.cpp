@@ -143,3 +143,8 @@ void HashTableInterface::setIndex(unordered_map<string, unordered_map<string, in
 {
     this->index = map;
 }
+
+bool HashTableInterface::isIndexEmpty() const {
+  return this->index.empty();
+}
+

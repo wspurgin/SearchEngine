@@ -42,6 +42,8 @@ public:
     unordered_map<string, unordered_map<string, int> > getIndex() const;
 
     void setIndex(unordered_map<string, unordered_map<string, int> >& map);
+
+    bool isIndexEmpty() const;
 };
 
 #endif

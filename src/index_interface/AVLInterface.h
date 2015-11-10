@@ -40,6 +40,8 @@ public:
     void writeIndex() const;
 
     void writeIndex(ostream& out) const;
+
+    bool isIndexEmpty() const;
 };
 
 #endif

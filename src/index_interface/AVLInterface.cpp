@@ -134,3 +134,7 @@ void AVLInterface::writeIndex(ostream& out) const
 {
     this->index.print(out);
 }
+
+bool AVLInterface::isIndexEmpty() const {
+  return this->index.isEmpty();
+}

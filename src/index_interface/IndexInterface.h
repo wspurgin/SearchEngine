@@ -39,6 +39,8 @@ public:
 
     virtual void writeIndex(ostream& out) const = 0;
 
+    virtual bool isIndexEmpty() const = 0;
+
     string getIndexFilePath() const { return this->indexFilePath; }
 
     void setIndexFilePath(string path) { this->indexFilePath = path; }
