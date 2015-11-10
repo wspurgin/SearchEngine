@@ -1,6 +1,7 @@
 ############################################################
 # Makefile
 ############################################################
+all:
 
 UNAME := $(shell uname)
 
@@ -27,7 +28,7 @@ CXXFLAGS := $(CXXFLAGS) $(IFLAGS)
 
 ALL := $(addprefix $(BIN_DIR), $(ALL))
 
-$(BIN_DIR)SearchEngine.out: $(MAKE_DIR)SearchEngine.cpp $(ALL) | $(BIN_DIR)
+$(BIN_DIR)SearchEngine.out: $(MAKE_DIR)SearchEngine.cpp $(ALL) copy_ui_man | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) $(MAKE_DIR)SearchEngine.cpp $(ALL)  -o $@
 
 $(BIN_DIR)testAVL.out: $(TEST_DIR)testAVL.cpp | $(BIN_DIR)
@@ -52,7 +53,7 @@ $(BIN_DIR):
 clean:
 	rm -rf $(BIN_DIR)
 
-.PHONEY: print_vars, search_engine
+.PHONEY: print_vars, search_engine, copy_ui_man
 print_vars:
 	@echo "CXX => $(CXX)"
 	@echo "CXXFLAGS => $(CXXFLAGS)"
@@ -63,6 +64,10 @@ print_vars:
 
 search_engine: $(BIN_DIR)SearchEngine.out
 	@echo "Finished building Search Engine"
+
+copy_ui_man:
+	@echo "Copy UI manual to $(BIN_DIR)"
+	cp $(MAKE_DIR)/ui_man $(BIN_DIR)/.ui_man
 
 ######### END OF FILE #########
 
