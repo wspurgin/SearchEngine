@@ -21,7 +21,7 @@ private:
 
     void print(ostream& out) const;
 public:
-    HashTableInterface();
+    HashTableInterface(string indexFilePath="index.txt");
 
     HashTableInterface(const HashTableInterface& rhs);
 

@@ -20,10 +20,10 @@ private:
     IndexInterface* interface;
 
 public:
-    IndexHandler(bool buildAVL=false);
-    
+    IndexHandler(bool buildAVL=false, string indexFilePath="index.txt");
+
     IndexHandler(const IndexHandler& rhs);
-    
+
     ~IndexHandler();
 
     bool setUpIndex(bool asAVL=false);

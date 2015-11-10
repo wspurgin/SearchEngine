@@ -11,6 +11,12 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    UI ui;
-    return ui.launch();
+  string indexFilePath;
+  if (argc < 2)
+    indexFilePath = nullptr;
+  else
+    indexFilePath = argv[1];
+
+  UI ui(indexFilePath);
+  return ui.launch();
 }

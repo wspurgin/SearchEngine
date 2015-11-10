@@ -22,8 +22,8 @@ protected:
     string indexFilePath;
 
 public:
-    
-    IndexInterface() { indexFilePath="../index.txt"; }
+
+    IndexInterface(string indexFilePath = "index.txt") { this->indexFilePath = indexFilePath; }
 
     virtual ~IndexInterface() {};
 

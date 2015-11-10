@@ -22,7 +22,7 @@ using namespace std;
 class UI
 {
 private:
-    IndexHandler handler;
+    IndexHandler *handler = nullptr;
     DocProcessor doc_processor;
     QueryProcessor query_processor;
 
@@ -54,7 +54,7 @@ private:
 
 public:
 
-    UI();
+    UI(string indexFilePath="index.txt");
 
     UI(const UI& rhs);
 
@@ -62,7 +62,7 @@ public:
 
     int launch();
 
-    IndexHandler getHandler() const;
+    IndexHandler* getHandler() const;
 
     DocProcessor getDocProcessor() const;
 

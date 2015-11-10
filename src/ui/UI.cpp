@@ -6,11 +6,12 @@
 
 using namespace std;
 
-UI::UI()
+UI::UI(string indexFilePath)
 {
     cout << "Initializing." << endl;
-    this->query_processor.setHandler(this->handler);
-    this->doc_processor.setHandler(this->handler);
+    this->handler = new IndexHandler(false, indexFilePath);
+    this->query_processor.setHandler(*(this->handler));
+    this->doc_processor.setHandler(*(this->handler));
 
     mode = -1;
 }
@@ -25,16 +26,19 @@ UI::UI(const UI& rhs)
 
 UI::~UI()
 {
-    //do nothing, all memebers handle themselves
+  delete this->handler;
 }
 
 int UI::launch()
 {
     cout << "Welcome to MustangWiki Search!" << endl;
-    return ch_mode();
+    if (ch_mode() != 0)
+      return waitForCommand();
+    else
+      return 0;
 }
 
-IndexHandler UI::getHandler() const { return this->handler; }
+IndexHandler* UI::getHandler() const { return this->handler; }
 
 DocProcessor UI::getDocProcessor() const { return this->doc_processor; }
 
@@ -255,7 +259,7 @@ int UI::build_as_ht()
             choice = tolower(choice);
             if(choice == 'y')
             {
-                if(!this->handler.setUpIndex())
+                if(!this->handler->setUpIndex())
                     cout << "Errors have occured attempting to build Index as Hash Table." << endl;
             }
             else
@@ -272,7 +276,7 @@ int UI::build_as_ht()
     }
     else
     {
-        if(!this->handler.setUpIndex())
+        if(!this->handler->setUpIndex())
             cout << "Errors occured when attempting to build Index as Hash Table" << endl;
     }
     return 0;
@@ -293,7 +297,7 @@ int UI::build_as_avl()
             choice = tolower(choice);
             if(choice == 'y')
             {
-                if(!this->handler.setUpIndex())
+                if(!this->handler->setUpIndex())
                     cout << "Errors have occured attempting to build Index as AVL Tree." << endl;
             }
             else
@@ -310,7 +314,7 @@ int UI::build_as_avl()
     }
     else
     {
-        if(!this->handler.setUpIndex())
+        if(!this->handler->setUpIndex())
             cout << "Errors occured when attempting to build Index as AVL Tree" << endl;
     }
     return 0;
@@ -319,46 +323,45 @@ int UI::build_as_avl()
 int UI::add(string filePath)
 {
 
-    try
+  try
+  {
+    if(filePath == "all")
     {
-        if(filePath == "all")
-        {
-            //number of wiki 'Part' files
-            int number = (171000/this->doc_processor.getBlockSize()) + 1;
+      //number of wiki 'Part' files
+      int number = (171000/this->doc_processor.getBlockSize()) + 1;
 
-            for(int i = 1; i <= number; i++)
-            {
-                stringstream file;
-                file << "../WikiDump/WikiDumpPart";
-                file << i << ".xml";
-                if(i%10 == 0) cout << "Reading File " << i << endl;
-                        //Sort the data, and time the results
+      for(int i = 1; i <= number; i++)
+      {
+        stringstream file;
+        file << "../WikiDump/WikiDumpPart";
+        file << i << ".xml";
+        if(i%10 == 0) cout << "Reading File " << i << endl;
+        //Sort the data, and time the results
 
-                this->doc_processor.readDocs(file.str().c_str());
+        this->doc_processor.readDocs(file.str().c_str());
 
-                if(this->mode != 3)
-                    return 1;
-            }
-        }
-        else
-        {
-            this->doc_processor.readDocs(filePath.c_str());
-            if(this->mode != 3)
-                return 1;
-        }
+      }
+      if(this->mode != 3)
+        return 1;
     }
-    catch(logic_error& e)
+    else
     {
-        cout << e.what() << endl;
-        if(this->mode != 3)
-            return 1;
+      this->doc_processor.readDocs(filePath.c_str());
+      if(this->mode != 3)
+        return 1;
     }
-    /*
-    If something unaccounted for happens but we get here without
-    any errors and we are not in stress-test mode. Return 0 will
-    let the program exit gracefully.
-    */
-    return 0;
+  }
+  catch(logic_error& e)
+  {
+    cout << e.what() << endl;
+    return 1;
+  }
+  /*
+     If something unaccounted for happens but we get here without
+     any errors and we are not in stress-test mode. Return 0 will
+     let the program exit gracefully.
+     */
+  return 0;
 }
 
 int UI::clear_index()
@@ -376,7 +379,7 @@ int UI::clear_index()
             choice = tolower(choice);
             if(choice == 'y')
             {
-                this->handler.clearIndex();
+                this->handler->clearIndex();
                     cout << "Errors have occured attempting to build Index as AVL Tree." << endl;
             }
             else
@@ -390,7 +393,7 @@ int UI::clear_index()
         }
     }
     else
-        this->handler.clearIndex();
+        this->handler->clearIndex();
     return 0;
 }
 
@@ -459,7 +462,7 @@ int UI::ch_mode()
     }
     cout << "Entering " << u_mode << " mode." << endl;
     if(this->mode == 3)
-        return stress_test();
+        stress_test();
     return 1;
 }
 
@@ -484,7 +487,7 @@ int UI::stress_test()
             cout << "Exiting stress-test mode." << endl;
             cout << "Moving to interactive mode." << endl;
             this->mode = 1;
-            return waitForCommand();
+            return 1;
         }
         ifstream fin(file_path);
         if(fin)

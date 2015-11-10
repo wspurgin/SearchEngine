@@ -19,7 +19,7 @@ AVLInterface::~AVLInterface()
     writeIndex();
 }
 
-/* 
+/*
 Copy Consturctor (AVLTree doesn't have a copy constructor) so we write the
 current state of 'rhs' to it's indexFile then we copy that location to this
 instance of AVLInterface and load the index. (might be better to have a
@@ -50,47 +50,50 @@ void AVLInterface::addWord(string word, string docID, int freq)
 // 'indexFilePath'
 void AVLInterface::loadIndex()
 {
+  ifstream fin(this->indexFilePath.c_str());
+  if(fin)
+  {
     //clear the index
     clearIndex();
 
-    ifstream fin(this->indexFilePath.c_str());
-    if(fin)
+    //each entry will be of this form:
+    /* [word] [docID] [freq] [otherDocId] [freq] ... */
+    string line;
+    while(fin.good())
     {
-        //each entry will be of this form:
-        /* [word] [docID] [freq] [otherDocId] [freq] ... */
-        string line;
-        while(fin.good())
-        {
-            getline(fin, line);
+      getline(fin, line);
 
-            stringstream stream(line);
-            IndexWord temp;
-            stream >> temp.word;
-            //line is formatted wrong or we've reached the end
-            // of the file without triggering an eof_bit flag
-            if(temp.word == "")
-                continue;
-            while(stream.good())
-            {
-                // first entry will be a doc id, then an integer word frequency
-                string id;
-                int freq;
-                stream >> id;
-                stream >> freq;
-                // if id is not set, then we have reached the end of the line
-                // before any 'bad' flag in the stream was raised
-                if(id == "")
-                    break;
+      stringstream stream(line);
+      IndexWord temp;
+      stream >> temp.word;
+      //line is formatted wrong or we've reached the end
+      // of the file without triggering an eof_bit flag
+      if(temp.word == "")
+        continue;
+      while(stream.good())
+      {
+        // first entry will be a doc id, then an integer word frequency
+        string id;
+        int freq;
+        stream >> id;
+        stream >> freq;
+        // if id is not set, then we have reached the end of the line
+        // before any 'bad' flag in the stream was raised
+        if(id == "")
+          break;
 
-                temp.rankingPairs[id] = freq;
-            }
+        temp.rankingPairs[id] = freq;
+      }
 
-            // add word to index
-            this->index.insert(temp);
-        }
+      // add word to index
+      this->index.insert(temp);
     }
-    else
-        throw logic_error("Index File bad. Could not open");
+  }
+  else {
+    // issue warning
+    cerr << "The index file '" << this->indexFilePath <<
+      "' could not be opened" << endl;
+  }
 }
 
 //search the index for a given word
@@ -117,14 +120,14 @@ void AVLInterface::clearIndex()
 //writes index to output file
 void AVLInterface::writeIndex() const
 {
-    ofstream fout(this->indexFilePath.c_str());
-    if(fout)
-    {
-        this->index.print(fout);
-    }
-    else
-        throw logic_error("Error creating index file");
-    fout.close();
+  ofstream fout(this->indexFilePath.c_str());
+  if(fout)
+  {
+    this->index.print(fout);
+  }
+  else
+    throw logic_error("Error creating index file");
+  fout.close();
 }
 
 void AVLInterface::writeIndex(ostream& out) const

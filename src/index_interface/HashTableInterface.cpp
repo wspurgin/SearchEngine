@@ -9,10 +9,9 @@ Search Engine - Data Structures
 
 using namespace std;
 
-HashTableInterface::HashTableInterface()
+HashTableInterface::HashTableInterface(string indexFilePath) : IndexInterface(indexFilePath)
 {
-    
-    loadIndex();
+  loadIndex();
 }
 
 HashTableInterface::HashTableInterface(const HashTableInterface& rhs)
@@ -48,7 +47,7 @@ void HashTableInterface::addWord(string word, string docID, int freq)
     new key as 'word' and then return a neww unordered_map<string, int>
 
     The second part '[docID] += freq' will create a new key and stores an freq.
-    Since all the document IDs are supposed to be unique, there won't be a 
+    Since all the document IDs are supposed to be unique, there won't be a
     case where calling [docID] will return an already existing bucket. (This
     is true because having the same word be on the same page is recoreded in
     the int 'freq' and won't be added to the index till at least after reading
@@ -61,52 +60,55 @@ void HashTableInterface::addWord(string word, string docID, int freq)
 
 void HashTableInterface::loadIndex()
 {
-        //clear the index
+  ifstream fin(this->indexFilePath.c_str());
+  if(fin)
+  {
+    //clear the index
     clearIndex();
 
-    ifstream fin(this->indexFilePath.c_str());
-    if(fin)
+    //each entry will be of this form:
+    /* [word] [docID] [freq] [otherDocId] [freq] ... */
+    string line;
+    while(fin.good())
     {
-        //each entry will be of this form:
-        /* [word] [docID] [freq] [otherDocId] [freq] ... */
-        string line;
-        while(fin.good())
-        {
-            getline(fin, line);
+      getline(fin, line);
 
-            stringstream stream(line);
-            string word;
-            stream >> word;
-            //line is formatted wrong or we've reached the end
-            // of the file without triggering an eof_bit flag
-            if(word == "")
-                continue;
-            // add the word to the index
-            this->index[word];
+      stringstream stream(line);
+      string word;
+      stream >> word;
+      //line is formatted wrong or we've reached the end
+      // of the file without triggering an eof_bit flag
+      if(word == "")
+        continue;
+      // add the word to the index
+      this->index[word];
 
-            while(stream.good())
-            {
-                // first entry will be a doc id, then an integer word frequency
-                string id;
-                int freq;
-                stream >> id;
-                stream >> freq;
-                // if id is not set, then we have reached the end of the line
-                // before any 'bad' flag in the stream was raised
-                if(id == "")
-                    break;
-                this->index[word][id] += freq;
-            }
-        }
+      while(stream.good())
+      {
+        // first entry will be a doc id, then an integer word frequency
+        string id;
+        int freq;
+        stream >> id;
+        stream >> freq;
+        // if id is not set, then we have reached the end of the line
+        // before any 'bad' flag in the stream was raised
+        if(id == "")
+          break;
+        this->index[word][id] += freq;
+      }
     }
-    else
-        throw logic_error("Index File bad. Could not open");
+  }
+  else {
+    // issue warning
+    cerr << "The index file '" << this->indexFilePath <<
+      "' could not be opened" << endl;
+  }
 }
 
 unordered_map<string, int> HashTableInterface::searchIndex(string word)
 {
     // this is a case where if the word is not already there
-    // it will create a new key for it. 
+    // it will create a new key for it.
     return this->index[word];
 }
 

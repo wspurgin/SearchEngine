@@ -7,21 +7,20 @@ Search Engine - Data Structures
 
 #include "IndexHandler.h"
 
-IndexHandler::IndexHandler(bool buildAVL)
+IndexHandler::IndexHandler(bool buildAVL, string indexFilePath)
 {
     if(!buildAVL)
     {
         cout << "Building Index as Hash Table" << endl;
-        this->interface = new HashTableInterface();
+        this->interface = new HashTableInterface(indexFilePath);
     }
     else
     {
         cout << "Building Index as AVL tree" << endl;
         this->interface = new AVLInterface();
     }
-
 }
-    
+
 IndexHandler::IndexHandler(const IndexHandler& rhs)
 {
     //WARNING: copying IndexHandlers is a bad Idea! We don't want
@@ -29,13 +28,13 @@ IndexHandler::IndexHandler(const IndexHandler& rhs)
     // isn't garaunteed.
     this->interface = rhs.getInterface();
 }
-    
+
 IndexHandler::~IndexHandler()
 {
-    cout << "Wrting out Index...";
-    this->interface->writeIndex();
-    cout << "    Done" << endl;
-    delete this->interface;
+  cout << "Wrting out Index...";
+  this->interface->writeIndex();
+  cout << "    Done" << endl;
+  delete this->interface;
 }
 
 bool IndexHandler::setUpIndex(bool asAVL)
